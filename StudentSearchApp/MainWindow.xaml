@@ -1,0 +1,213 @@
+<Window x:Class="StudentSearchApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Student Search Engine - NLP Based Search" Height="700" Width="900"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="20,15">
+            <StackPanel>
+                <TextBlock Text="ML.NET Student Search Engine" 
+                           FontSize="24" FontWeight="Bold" 
+                           Foreground="White" Margin="0,0,0,5"/>
+                <TextBlock Text="NLP-Based Semantic Search with ML.NET" 
+                           FontSize="14" 
+                           Foreground="#ECF0F1" 
+                           Opacity="0.9"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Fixed Top Menu Bar -->
+        <Border Grid.Row="1" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,1,0,1" Padding="10,8">
+            <StackPanel>
+                <TextBlock Text="Quick Actions" 
+                           FontSize="12" FontWeight="Bold" 
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,0,0,8"/>
+
+                <!-- Button Grid - 6 columns, smaller buttons -->
+                <UniformGrid Columns="6" HorizontalAlignment="Stretch">
+                    <Button Content="Show All" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="ShowAllStudents_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                    <Button Content="Passed" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#27AE60"
+                            Click="ShowPassed_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                    <Button Content="Failed" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#E74C3C"
+                            Click="ShowFailed_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                    <Button Content="Science" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#8E44AD"
+                            Click="ShowScience_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                    <Button Content="Pass+Sci" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#16A085"
+                            Click="ShowPassedScience_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                    <Button Content="Fail+Sci" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#C0392B"
+                            Click="ShowFailedScience_Click"
+                            Padding="10,8"
+                            Margin="5"
+                            FontSize="11"/>
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Margin="20">
+                <!-- Semantic Search Section -->
+                <TextBlock Text="Semantic Search (NLP-Based)" 
+                           FontSize="18" FontWeight="Bold" 
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,0,0,15"/>
+
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="SearchQueryTextBox" 
+                             
+                             Grid.Column="0"
+                             Height="40"
+                             VerticalAlignment="Center"
+                             />
+
+                    <Button Content="Search" 
+                            Style="{StaticResource MenuButtonStyle}"
+                            Grid.Column="1"
+                            Width="120"
+                            Margin="10"
+                            Click="SemanticSearch_Click"/>
+                </Grid>
+
+                <!-- Advanced Filters Section -->
+                <TextBlock Text="Advanced Search with Filters" 
+                           FontSize="18" FontWeight="Bold" 
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,30,0,15"/>
+
+                <Border BorderBrush="#BDC3C7" BorderThickness="1" CornerRadius="4" Padding="15" Background="White" Margin="0,0,0,20">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="FilteredSearchTextBox" 
+                                     Style="{StaticResource SearchTextBoxStyle}"
+                                     Grid.Column="0"
+                                     Height="40"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,10,0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <CheckBox x:Name="PassedCheckBox" 
+                                         Content="Passed Only" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,20,0"
+                                         Foreground="{StaticResource TextBrush}"/>
+                                <CheckBox x:Name="ScienceCheckBox" 
+                                         Content="Science Only" 
+                                         VerticalAlignment="Center"
+                                         Foreground="{StaticResource TextBrush}"/>
+                            </StackPanel>
+
+                            <Button Content="Search with Filters" 
+                                    Style="{StaticResource MenuButtonStyle}"
+                                    Grid.Column="2"
+                                    Width="150"
+                                    Margin="0"
+                                    Click="SearchWithFilters_Click"/>
+                        </Grid>
+
+                        <StackPanel x:Name="FilterInfoPanel" Visibility="Collapsed" Margin="0,10,0,0">
+                            <TextBlock x:Name="FilterInfoText" 
+                                       Foreground="#27AE60" 
+                                       FontSize="12"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Results Section -->
+                <TextBlock Text="Search Results" 
+                           FontSize="18" FontWeight="Bold" 
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,0,0,15"/>
+
+                <Border BorderBrush="#BDC3C7" BorderThickness="1" CornerRadius="4" Background="White">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="ResultsInfoTextBlock" 
+                                   Grid.Row="0"
+                                   Text="No results yet. Use the search options above to get started."
+                                   Padding="15,15,15,5"
+                                   Foreground="#7F8C8D"
+                                   FontStyle="Italic"/>
+
+                        <DataGrid x:Name="ResultsDataGrid" 
+                                  Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="None"
+                                  BorderThickness="0"
+                                  MinHeight="200"
+                                  MaxHeight="400">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="120"/>
+                                <DataGridTextColumn Header="School" Binding="{Binding SchoolName}" Width="150"/>
+                                <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" Width="100"/>
+                                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="150"/>
+                                <DataGridTextColumn Header="Grade" Binding="{Binding Grade}" Width="60"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Status Bar -->
+                <Border Margin="0,20,0,0" Padding="15" Background="White" CornerRadius="4" BorderBrush="#BDC3C7" BorderThickness="1">
+                    <TextBlock x:Name="StatusTextBlock" 
+                               Text="Ready"
+                               Foreground="{StaticResource TextBrush}"
+                               VerticalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
